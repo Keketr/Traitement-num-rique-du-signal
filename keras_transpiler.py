@@ -41,4 +41,6 @@ def keras_to_c(model_path, output_c_path):
         f.write('    return layer_output[0]; // Assuming single output\n')
         f.write('}\n')
 
+        
+
 
