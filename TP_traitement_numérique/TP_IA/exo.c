@@ -263,8 +263,7 @@ float ReLu(float x) {
 }
 float relu_no_if(float x) {
     return (x + fabs(x)) / 2.0f;
-    // pourquoi on divise par 2 ? parce que pour x positif, (x + x)/2 = x, et pour x négatif, (x + (-x))/2 = 0
-   
+    // pourquoi on fait ça ? Parce que si x est négatif, fabs(x) le rend positif, donc la somme est nulle. Si x est positif, la somme est 2*x, et en divisant par 2 on obtient x.
 }
 void benchmark() {
     const int iterations = 1000000;
@@ -387,6 +386,45 @@ Le réseau aura deux couches :
 1 couche feedforward avec 2 neurones (softmax)
 Les weights seront défini via des tableaux dans la fonction two_layer_network
 
+
+
+*/
+
+#include <stdio.h>
+float* two_layer_network(float *features, int n_feature) {
+    // Définition des poids pour la première couche (5 neurones)
+    float weights_layer1[5][n_feature + 1] = {
+        {0.2, 0.4, -0.5, 0.1}, // Poids pour le neurone 1
+        {-0.3, 0.8, 0.6, -0.2}, // Poids pour le neurone 2
+        {0.5, -0.7, 0.3, 0.4}, // Poids pour le neurone 3
+        {0.1, 0.2, -0.4, 0.9}, // Poids pour le neurone 4
+        {-0.6, 0.3, 0.7, -0.1}  // Poids pour le neurone 5
+    };
+
+    // Calcul de la sortie de la première couche
+    float* layer1_output = compute_layer_output(features, (float**)weights_layer1, n_feature, 5);
+
+    // Définition des poids pour la deuxième couche (2 neurones)
+    float weights_layer2[2][5 + 1] = {
+        {0.3, -0.2, 0.5, 0.1, -0.4, 0.6}, // Poids pour le neurone 1
+        {-0.5, 0.4, -0.3, 0.7, 0.2, -0.1} // Poids pour le neurone 2
+    };
+
+    // Calcul de la sortie de la deuxième couche
+    float* layer2_output = compute_layer_output(layer1_output, (float**)weights_layer2, 5, 2);
+
+    // Application de la fonction softmax sur la sortie de la deuxième couche
+    float* final_output = softmax(layer2_output, 2);
+
+    // Libération de la mémoire allouée pour les sorties intermédiaires
+    free(layer1_output);
+    free(layer2_output);
+
+    return final_output;
+}
+
+/*
+
 Pour tester votre réseau vous pourrez entraîner un modèle en keras sur des données aléatoire gaussien à 2 ou 3 dimensions. 
 
 Pour les labels  on considerera que y = 1 si x_1 + x_2 + x_3 > 0 
@@ -396,30 +434,9 @@ y = 0 sinon.
 Vous vérifierez alors que votre modèle en C fait les même prédiction que le modèle keras
 
 */
-#include <stdio.h>
-float* two_layer_network(float *features, int n_feature) {
-    float weights_layer1[5][4] = {
-        {0.2f, 0.4f, -0.5f, 0.1f},
-        {-0.3f, 0.2f, 0.6f, -0.1f},
-        {0.5f, -0.4f, 0.3f, 0.2f},
-        {0.1f, 0.3f, -0.2f, 0.4f},
-        {-0.2f, 0.5f, 0.1f, -0.3f}
-    };
 
-    float *layer1_output = compute_layer_output(features, &weights_layer1[0][0], n_feature, 5);
 
-    float weights_layer2[2][6] = {
-        {0.3f, -0.2f, 0.4f, 0.1f, -0.5f, 0.2f},
-        {-0.4f, 0.3f, -0.1f, 0.5f, 0.2f, -0.3f}
-    };
 
-    float *layer2_output = compute_layer_output(layer1_output, &weights_layer2[0][0], 5, 2);
-
-    float *final_output = softmax(layer2_output, 2);
-
- 
-
-    return final_output;
 
 /*
 
@@ -509,3 +526,174 @@ float** convolution_2d(float ** values, int n_row, int n_col, float ** kernel, i
     return output;
 }
 
+/*
+
+Créer une fonction find_first_value qui retourne l'indice de la première valeur recherchée. Elle doit renvoyée -1 si la valeur n'est pas dans le tableau
+
+La fonction doit  avoir le prototype suivant : 
+
+int find_first_value (float value_to_find, float* values, int n_values) 
+
+Remarque : pas besoin de fonction main ! 
+
+*/
+
+#include <stdio.h>
+int find_first_value (float value_to_find, float* values, int n_values) {
+    for (int i = 0; i < n_values; i++) {
+        if (values[i] == value_to_find) {
+            return i; // Retourne l'indice de la première occurrence
+        }
+    }
+    return -1; // Valeur non trouvée
+}
+
+
+/*
+
+Créer une fonction avant le prototype suivant : 
+
+float* array_filter_below(float values[], int n_values, float max_value) 
+
+qui créer un tableau ne contenant les valeurs de  values inferieure à max_values. 
+
+ 
+
+Vous n'avez pas besoin de coder le main, seulement la fonction. 
+
+*/
+
+#include <stdio.h>
+#include <stdlib.h>
+float* array_filter_below(float values[], int n_values, float max_value) {
+    // Première passe pour compter le nombre d'éléments inférieurs à max_value
+    int count = 0;
+    for (int i = 0; i < n_values; i++) {
+        if (values[i] < max_value) {
+            count++;
+        }
+    }
+
+    // Allocation du tableau résultat
+    float* filtered_array = (float*)malloc(count * sizeof(float));
+    
+
+    // Deuxième passe pour remplir le tableau résultat
+    int index = 0;
+    for (int i = 0; i < n_values; i++) {
+        if (values[i] < max_value) {
+            filtered_array[index++] = values[i];
+        }
+    }
+
+    
+    return filtered_array;
+}
+
+
+/*
+
+Créer une fonction nommée int** add_matrices(int ** mat1, int **mat2, int n_row, int n_col) qui calcule la somme des matrices mat1 et mat2
+
+Il faudra créer une matrice m3 avec malloc de la bonne taille et retourner le pointeur
+
+*/
+
+#include <stdio.h>
+#include <stdlib.h>
+int** add_matrices(int ** mat1, int **mat2, int n_row, int n_col) {
+    // Allocation dynamique pour la matrice résultat
+    int** result = (int**)malloc(n_row * sizeof(int*));
+    for (int i = 0; i < n_row; i++) {
+        result[i] = (int*)malloc(n_col * sizeof(int));
+    }
+
+    // Calcul de la somme des matrices
+    for (int i = 0; i < n_row; i++) {
+        for (int j = 0; j < n_col; j++) {
+            result[i][j] = mat1[i][j] + mat2[i][j];
+        }
+    }
+
+    return result;
+}
+
+
+/*
+
+Créer une fonction accuracy(int* y, int* y_preds, int n_values) qui calcule l'accuracy (précision) d'un modèle de prédiction.
+
+L'accuracy est définie comme la proportion de prédictions correctes parmi toutes les prédictions. Une prédiction est considérée comme correcte lorsque la valeur prédite (y_preds[i]) est égale à la valeur réelle (y[i]).
+
+La fonction doit retourner un float représentant cette proportion (entre 0.0 et 1.0).
+
+*/
+
+
+#include <stdio.h>
+float accuracy(int* y, int* y_preds, int n_values) {
+    int correct_predictions = 0;
+
+    for (int i = 0; i < n_values; i++) {
+        if (y[i] == y_preds[i]) {
+            correct_predictions++;
+        }
+    }
+
+    return (float)correct_predictions / n_values;
+}
+
+
+/*
+
+En effectuant des recherches si besoin, faire expliquer avec vos propres mots ce que c'est qu'avec des classes déséquilibrées dans son dataset (class imbalances)
+Une classe déséquilibrée dans un dataset fait référence à une situation où les différentes classes ou catégories d'un ensemble de données ne sont pas représentées de manière égale. 
+Par exemple, dans un problème de classification binaire, si 90% des exemples appartiennent à la classe A et seulement 10% à la classe B, on dit que les classes sont déséquilibrées.
+
+*/
+
+
+/*
+
+On suppose qu'on a un dataset avec 1000 lignes.
+Pour 900 lignes y = 0
+
+et 100 lignes y = 1. 
+
+Indiquer quelle serait l'accuracy (entre 0  et 1) d'un modèle  f_w: x → 0 
+
+*/
+
+//La précision (accuracy) d'un modèle qui prédit toujours y = 0 dans un dataset où 900 lignes ont y = 0 et 100 lignes ont y = 1 serait de 0,9 (ou 90%).
+
+
+/*
+
+En effectuant des recherches si besoin, faire expliquer pourquoi l'accuracy peut etre un faux ami dans le cas où on a un dataset déséquilibré. 
+
+The answer correctly identifies that accuracy can be misleading with imbalanced datasets and mentions how a model might simply predict the majority class. 
+However, the explanation lacks depth and specific details - no mention of metrics better suited for imbalanced data (like precision, recall, F1-score), no numerical examples to illustrate the point, and no discussion of why this is problematic from a practical perspective. 
+The response is coherent but brief, missing opportunities to demonstrate a more thorough understanding of the issue.
+
+*/
+
+
+/*
+
+En faitsant des recherches si besoin, expliquer avec vos propres mots ce qu'est la précision et le recall en machine learning. 
+La précision (precision) en machine learning est une métrique qui mesure la proportion de prédictions positives correctes parmi toutes les prédictions positives effectuées par le modèle.
+Le rappel (recall), également connu sous le nom de sensibilité, mesure la proportion de vraies positives qui ont été correctement identifiées par le modèle parmi toutes les instances positives réelles dans le dataset.
+ 
+
+*/
+
+
+/*
+
+Expliquer ce qu'est une matrice de confusion et ce qu'elle permet de mesurer
+Une matrice de confusion est un tableau utilisé pour évaluer la performance d'un modèle de classification. 
+Elle présente les prédictions du modèle par rapport aux valeurs réelles, permettant ainsi de visualiser les erreurs de classification. 
+Elle permet de mesurer des métriques telles que la précision, le rappel, la spécificité et le F1-score, offrant une compréhension plus approfondie de la performance du modèle au-delà de l'accuracy simple.
+
+
+*/
