@@ -463,6 +463,27 @@ float* convolution_1d(float *data, float *kernel, int n_values, int kernel_size)
     return output;
 }
 
+// test main pour convolution_1d
+void test_convolution_1d() {
+    float data[] = {1.0, 2.0, 3.0, 4.0, 5.0};
+    float kernel[] = {0.2, 0.5, 0.3};
+    int n_values = 5;
+    int kernel_size = 3;
+
+    float* result = convolution_1d(data, kernel, n_values, kernel_size);
+    int output_size = n_values - kernel_size + 1;
+
+    printf("Résultat de la convolution 1D:\n");
+    for (int i = 0; i < output_size; i++) {
+        printf("%.2f ", result[i]);
+    }
+    printf("\n");
+
+    free(result);
+}
+
+// résultat 
+
 
 /*
 
@@ -480,16 +501,43 @@ float** compute_layer_output(float *data, float **kernels, int n_values, int ker
     float** output = (float**)malloc(n_kernels * sizeof(float*));
 
     for (int k = 0; k < n_kernels; k++) {
-        output[k] = (float*)malloc(output_size * sizeof(float));
-        for (int i = 0; i < output_size; i++) {
-            output[k][i] = 0.0f;
-            for (int j = 0; j < kernel_size; j++) {
-                output[k][i] += data[i + j] * kernels[k][j];
-            }
-        }
+        output[k] = convolution_1d(data, kernels[k], n_values, kernel_size);
     }
 
     return output;
+}
+
+
+// test main pour compute_layer_output
+void test_compute_layer_output() {
+    float data[] = {1.0, 2.0, 3.0, 4.0, 5.0};
+    int n_values = 5;
+    int kernel_size = 3;
+    int n_kernels = 2;
+
+    // Définition de deux kernels
+    float** kernels = (float**)malloc(n_kernels * sizeof(float*));
+    kernels[0] = (float[]){0.2, 0.5, 0.3};
+    kernels[1] = (float[]){-0.1, 0.4, 0.6};
+
+    float** result = compute_layer_output(data, kernels, n_values, kernel_size, n_kernels);
+    int output_size = n_values - kernel_size + 1;
+
+    printf("Résultat de la couche de convolution:\n");
+    for (int k = 0; k < n_kernels; k++) {
+        printf("Kernel %d: ", k + 1);
+        for (int i = 0; i < output_size; i++) {
+            printf("%.2f ", result[k][i]);
+        }
+        printf("\n");
+    }
+
+    // Libération de la mémoire
+    for (int k = 0; k < n_kernels; k++) {
+        free(result[k]);
+    }
+    free(result);
+    free(kernels);
 }
 
 
