@@ -1,12 +1,3 @@
-/**
- * 
- * @file exo.c
- * 
- * codage d'exo en C
- */
-
-
-
  /**
   
 
@@ -760,7 +751,7 @@ Il faudra créer une matrice m3 avec malloc de la bonne taille et retourner le p
 
 #include <stdio.h>
 #include <stdlib.h>
-int** add_matrices(int ** mat1, int **mat2, int n_row, int n_col) {
+int**add_matrices(int ** mat1, int **mat2, int n_row, int n_col) {
     // Allocation dynamique pour la matrice résultat
     int** result = (int**)malloc(n_row * sizeof(int*));
     for (int i = 0; i < n_row; i++) {
@@ -856,3 +847,62 @@ Elle permet de mesurer des métriques telles que la précision, le rappel, la sp
 
 
 */
+
+
+/*
+
+A l'aide du développement en série entière de la fonction exponentielle, coder une fonction float exp_approx(float x, int n_term)
+
+
+*/
+
+
+#include <stdio.h>
+
+
+ float exp_approx(float x, int n_term) {
+    if (n_term <= 0) return 1.0f; /* si n = 0*/
+    float sum = 1.0f;     
+    float term = 1.0f;
+    for (int i = 1; i <= n_term; i++) {
+        term *= x / (float)i; 
+        sum += term;
+    }
+    return sum;
+}
+
+
+
+void test_main(){
+    extern float exp_approx(float x, int n_term);
+    printf("exp_approx(1,10) = %f\n", exp_approx(1.0f, 10)); 
+    printf("exp_approx(2,12) = %f\n", exp_approx(2.0f, 12)); 
+}
+
+
+/*
+
+Coder une fonction sigmoid(float x) qui permet de calculer la fonction sigmoid de x. 
+
+*/
+
+
+#include <stdio.h>
+#include <stddef.h>
+
+float sigmoid(float x)
+{
+    float e = exp_approx(-x, 10);
+    return 1.0f/(1.0 + e);
+}
+
+void test_main(){
+    
+    printf("sigmoid(0) = %f\n", sigmoid(0.0f));
+    
+}
+
+
+
+
+
