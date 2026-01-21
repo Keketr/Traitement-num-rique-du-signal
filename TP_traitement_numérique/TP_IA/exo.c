@@ -1,4 +1,5 @@
- /**
+// Code en C
+/**
   
 
   Exo 1 : 1. Écrire une fonction fill_vector qui va créer un vecteur de type float et de taille N. Elle doit avoir le prototype suivant : 
@@ -654,6 +655,48 @@ float** convolution_2d(float ** values, int n_row, int n_col, float ** kernel, i
     }
 
     return output;
+}
+
+// test main pour convolution_2d
+void test_main_2d() {
+    int n_row = 4;
+    int n_col = 4;
+    float** values = (float**)malloc(n_row * sizeof(float*));
+    for (int i = 0; i < n_row; i++) {
+        values[i] = (float*)malloc(n_col * sizeof(float));
+        for (int j = 0; j < n_col; j++) {
+            values[i][j] = (float)(i * n_col + j + 1); // Remplissage avec des valeurs de 1 à 16
+        }
+    }
+
+    int kernel_size = 2;
+    float** kernel = (float**)malloc(kernel_size * sizeof(float*));
+    kernel[0] = (float[]){0.2, 0.5};
+    kernel[1] = (float[]){-0.3, 0.8};
+
+    float** result = convolution_2d(values, n_row, n_col, kernel, kernel_size);
+    int output_rows = n_row - kernel_size + 1;
+    int output_cols = n_col - kernel_size + 1;
+
+    printf("Résultat de la convolution 2D:\n");
+    for (int i = 0; i < output_rows; i++) {
+        for (int j = 0; j < output_cols; j++) {
+            printf("%.2f ", result[i][j]);
+        }
+        printf("\n");
+    }
+
+    // Libération de la mémoire
+    for (int i = 0; i < n_row; i++) {
+        free(values[i]);
+    }
+    free(values);
+
+    for (int i = 0; i < output_rows; i++) {
+        free(result[i]);
+    }
+    free(result);
+    free(kernel);
 }
 
 /*

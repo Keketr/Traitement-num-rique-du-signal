@@ -1,3 +1,4 @@
+#code en python
 """/*
 
 //////////////////////////////////
@@ -40,12 +41,7 @@ y
 
 Remarque : dans cet exercice et les suivant on utilisera numpy à chaque fois qu'on manipulera des vecteurs ou des matrices. 
 
-par exemple, ici on considère que x est un vecteur numpy
-
-
-
-
-en python"""
+par exemple, ici on considère que x est un vecteur numpy en python"""
 
 
 import numpy as np
@@ -190,6 +186,10 @@ model.add(Dense(3, activation='softmax'))
 model.compile(optimizer=SGD(), loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
 # model.summary()  # Affiche le résumé du modèle
+
+# qu'est ce que c'est yolo ? # pourquoi on utilise ça en deep learning ?
+# yolo est un acronyme pour "You Only Look Once". 
+# C'est une méthode de détection d'objets en temps réel qui divise une image en une grille et prédit les bounding boxes et les probabilités de classe pour chaque grille simultanément.
 
 
 
