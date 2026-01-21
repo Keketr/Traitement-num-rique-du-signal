@@ -67,7 +67,6 @@ int** createMatrice(int nbRow, int nbColumn);
 
 2. Remplir la matrice de la valeur 0.
 
- 
 
 Exemple :
 
@@ -82,9 +81,6 @@ new_matrice[2][4] = {
 };
 
 /////////////////////////////////
-
-
-
 
 */
 
@@ -141,9 +137,7 @@ You only need to code the function, not the main.
 /////////////////////////////////
 
 
-
 */
-
 
 #include <stdio.h>
 float trace(float** matrix, int n_row, int n_col) {
@@ -171,8 +165,6 @@ Pas de fonction main, utiliser test_main
 
 */
 
-
-
 float linear_regression_prediction(float* features, float* thetas, int n_parameters) {
     
 
@@ -197,8 +189,6 @@ void test_main(){
 /*
 
 Coder une fonction logistic_regression(float* features, float* thetas, int n_parameter) qui calcul la prediction d'une regression logistique.
-
- 
 
 Attention thetas contient une valeur de plus que features pour tenir compte du bias (theta0). Le bias est stocké à l'indice 0 dans thetas
 
@@ -238,7 +228,6 @@ Create a function int* matrice_multiplication(int** matrice, int* vecteur, int v
 /////////////////////////////////
 
 */
-
 
 #include <stdio.h>
 int* matrice_multiplication(int** matrice, int* vecteur, int vector_size) {
@@ -386,7 +375,6 @@ float* softmax(float *values, int n_values) {
 }
 
 
-
 /*
 
 Coder une fonction relu_neurone(float *values, float* weights int n_features) qui calcule la sortie d'un neurone sur une entrée
@@ -408,7 +396,6 @@ float relu_neurone(float *values, float *weights, int n_features)
 
     return ReLu(sum);
 }
-
 
 /*
 
@@ -441,7 +428,6 @@ Le réseau aura deux couches :
 1 couche feedforward avec 5 neurones (relu)
 1 couche feedforward avec 2 neurones (softmax)
 Les weights seront défini via des tableaux dans la fonction two_layer_network
-
 
 
 */
@@ -490,8 +476,6 @@ y = 0 sinon.
 Vous vérifierez alors que votre modèle en C fait les même prédiction que le modèle keras
 
 */
-
-
 
 
 /*
@@ -581,10 +565,6 @@ votre avis la valeur numérique du argmin de la fonction cachée
 
 */
 // La valeur numérique du argmin de la fonction cachée est approximativement 1.0 après une descente de gradient suffisante.
-
-
-
-
 
 
 /*
@@ -901,8 +881,3 @@ void test_main(){
     printf("sigmoid(0) = %f\n", sigmoid(0.0f));
     
 }
-
-
-
-
-
