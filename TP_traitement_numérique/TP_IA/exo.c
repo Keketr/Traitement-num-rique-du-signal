@@ -166,7 +166,72 @@ float trace(float** matrix, int n_row, int n_col) {
     return trace_sum;
 }
 
+/*
 
+Coder une fonction float linear_regression_prediction(float* features, float* thetas, int n_parameters) qui calcul la prediction d'une regression lineaire pour une donnée passée dans features
+
+Exemple d'entrée 
+
+X = [1, 1, 1]
+
+theta = [0, 1, 1, 1]
+
+Pas de fonction main, utiliser test_main
+
+*/
+
+
+
+float linear_regression_prediction(float* features, float* thetas, int n_parameters) {
+    
+
+    float pred = thetas[0];
+    for (int i = 1; i < n_parameters; ++i)
+    {
+        pred += thetas[i] * features[i - 1];
+    }
+    return pred;
+}
+
+
+void test_main(){
+    float features[] = {1.0f, 1.0f, 1.0f};
+    float thetas[]   = {0.0f, 1.0f, 1.0f, 1.0f};
+
+    float y = linear_regression_prediction(features, thetas, 4);
+    printf("%f\n", y); 
+}
+
+
+/*
+
+Coder une fonction logistic_regression(float* features, float* thetas, int n_parameter) qui calcul la prediction d'une regression logistique.
+
+ 
+
+Attention thetas contient une valeur de plus que features pour tenir compte du bias (theta0). Le bias est stocké à l'indice 0 dans thetas
+
+La fonction sigmoid est mise disposition (le code est caché)
+
+*/
+
+
+float logistic_regression(float* features, float* thetas, int n_parameter) {
+    
+    float z = thetas[0];
+    for (int i = 1; i < n_parameter; ++i) {
+        z += thetas[i] * features[i - 1];
+    }
+    return sigmoid(z);
+}
+
+void test_main(){
+    
+    float f1[] = {1.0f, 1.0f, 1.0f};
+    float t1[] = {0.0f, 1.0f, 1.0f, 1.0f};
+    printf("test1: %f\n", logistic_regression(f1, t1, 4));
+    
+}
 
 /*
 
@@ -483,6 +548,52 @@ void test_convolution_1d() {
 }
 
 // résultat 
+
+/*
+
+Descente gradient C
+On veut faire la descente de gradient sur une fonction f: x -> y qui renvoie un scalaire.
+La fonction deriv_f qui calcule la dérivée de f en x est mise à votre disposition (le code est caché)
+Code en C la fonction descente_gradient qui prend en entrée un x initial, un nombre d'itération et
+un learning rate
+dans la fonction test_main, appliquer la descente de gradient sur 20 itérations avec un learning
+rate de 0.1 et un x_init= 2.5
+
+*/
+
+#include <stdio.h>
+float deriv_f(float x); // Prototype de la fonction dérivée (implémentation cachée)
+float descente_gradient(float x_init, int n_iterations, float learning_rate) {
+    float x = x_init;
+
+    for (int i = 0; i < n_iterations; i++) {
+        float grad = deriv_f(x);
+        x = x - learning_rate * grad;
+    }
+
+    return x;
+}
+void test_main() {
+    float x_init = 2.5f;
+    int n_iterations = 20;
+    float learning_rate = 0.1f;
+
+    float x_optimized = descente_gradient(x_init, n_iterations, learning_rate);
+    printf("Valeur optimisée de x après descente de gradient: %f\n", x_optimized);
+}
+
+/*
+
+Descente de gradient C - la valeur convergée
+en faisant tourner l'algorithme de descente de gradient suffisament longtemps, indiquer quel est à
+votre avis la valeur numérique du argmin de la fonction cachée
+
+*/
+// La valeur numérique du argmin de la fonction cachée est approximativement 1.0 après une descente de gradient suffisante.
+
+
+
+
 
 
 /*
