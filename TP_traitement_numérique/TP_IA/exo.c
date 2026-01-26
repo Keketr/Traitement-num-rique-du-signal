@@ -1,13 +1,5 @@
+// Code en C
 /**
- * 
- * @file exo.c
- * 
- * codage d'exo en C
- */
-
-
-
- /**
   
 
   Exo 1 : 1. Écrire une fonction fill_vector qui va créer un vecteur de type float et de taille N. Elle doit avoir le prototype suivant : 
@@ -76,7 +68,6 @@ int** createMatrice(int nbRow, int nbColumn);
 
 2. Remplir la matrice de la valeur 0.
 
- 
 
 Exemple :
 
@@ -91,9 +82,6 @@ new_matrice[2][4] = {
 };
 
 /////////////////////////////////
-
-
-
 
 */
 
@@ -150,9 +138,7 @@ You only need to code the function, not the main.
 /////////////////////////////////
 
 
-
 */
-
 
 #include <stdio.h>
 float trace(float** matrix, int n_row, int n_col) {
@@ -180,8 +166,6 @@ Pas de fonction main, utiliser test_main
 
 */
 
-
-
 float linear_regression_prediction(float* features, float* thetas, int n_parameters) {
     
 
@@ -206,8 +190,6 @@ void test_main(){
 /*
 
 Coder une fonction logistic_regression(float* features, float* thetas, int n_parameter) qui calcul la prediction d'une regression logistique.
-
- 
 
 Attention thetas contient une valeur de plus que features pour tenir compte du bias (theta0). Le bias est stocké à l'indice 0 dans thetas
 
@@ -247,7 +229,6 @@ Create a function int* matrice_multiplication(int** matrice, int* vecteur, int v
 /////////////////////////////////
 
 */
-
 
 #include <stdio.h>
 int* matrice_multiplication(int** matrice, int* vecteur, int vector_size) {
@@ -395,7 +376,6 @@ float* softmax(float *values, int n_values) {
 }
 
 
-
 /*
 
 Coder une fonction relu_neurone(float *values, float* weights int n_features) qui calcule la sortie d'un neurone sur une entrée
@@ -417,7 +397,6 @@ float relu_neurone(float *values, float *weights, int n_features)
 
     return ReLu(sum);
 }
-
 
 /*
 
@@ -450,7 +429,6 @@ Le réseau aura deux couches :
 1 couche feedforward avec 5 neurones (relu)
 1 couche feedforward avec 2 neurones (softmax)
 Les weights seront défini via des tableaux dans la fonction two_layer_network
-
 
 
 */
@@ -499,8 +477,6 @@ y = 0 sinon.
 Vous vérifierez alors que votre modèle en C fait les même prédiction que le modèle keras
 
 */
-
-
 
 
 /*
@@ -592,10 +568,6 @@ votre avis la valeur numérique du argmin de la fonction cachée
 // La valeur numérique du argmin de la fonction cachée est approximativement 1.0 après une descente de gradient suffisante.
 
 
-
-
-
-
 /*
 
 En utilisant la fonction de l'exercice précédent coder une fonction 
@@ -685,6 +657,48 @@ float** convolution_2d(float ** values, int n_row, int n_col, float ** kernel, i
     return output;
 }
 
+// test main pour convolution_2d
+void test_main_2d() {
+    int n_row = 4;
+    int n_col = 4;
+    float** values = (float**)malloc(n_row * sizeof(float*));
+    for (int i = 0; i < n_row; i++) {
+        values[i] = (float*)malloc(n_col * sizeof(float));
+        for (int j = 0; j < n_col; j++) {
+            values[i][j] = (float)(i * n_col + j + 1); // Remplissage avec des valeurs de 1 à 16
+        }
+    }
+
+    int kernel_size = 2;
+    float** kernel = (float**)malloc(kernel_size * sizeof(float*));
+    kernel[0] = (float[]){0.2, 0.5};
+    kernel[1] = (float[]){-0.3, 0.8};
+
+    float** result = convolution_2d(values, n_row, n_col, kernel, kernel_size);
+    int output_rows = n_row - kernel_size + 1;
+    int output_cols = n_col - kernel_size + 1;
+
+    printf("Résultat de la convolution 2D:\n");
+    for (int i = 0; i < output_rows; i++) {
+        for (int j = 0; j < output_cols; j++) {
+            printf("%.2f ", result[i][j]);
+        }
+        printf("\n");
+    }
+
+    // Libération de la mémoire
+    for (int i = 0; i < n_row; i++) {
+        free(values[i]);
+    }
+    free(values);
+
+    for (int i = 0; i < output_rows; i++) {
+        free(result[i]);
+    }
+    free(result);
+    free(kernel);
+}
+
 /*
 
 Créer une fonction find_first_value qui retourne l'indice de la première valeur recherchée. Elle doit renvoyée -1 si la valeur n'est pas dans le tableau
@@ -760,7 +774,7 @@ Il faudra créer une matrice m3 avec malloc de la bonne taille et retourner le p
 
 #include <stdio.h>
 #include <stdlib.h>
-int** add_matrices(int ** mat1, int **mat2, int n_row, int n_col) {
+int**add_matrices(int ** mat1, int **mat2, int n_row, int n_col) {
     // Allocation dynamique pour la matrice résultat
     int** result = (int**)malloc(n_row * sizeof(int*));
     for (int i = 0; i < n_row; i++) {
@@ -856,3 +870,57 @@ Elle permet de mesurer des métriques telles que la précision, le rappel, la sp
 
 
 */
+
+
+/*
+
+A l'aide du développement en série entière de la fonction exponentielle, coder une fonction float exp_approx(float x, int n_term)
+
+
+*/
+
+
+#include <stdio.h>
+
+
+ float exp_approx(float x, int n_term) {
+    if (n_term <= 0) return 1.0f; /* si n = 0*/
+    float sum = 1.0f;     
+    float term = 1.0f;
+    for (int i = 1; i <= n_term; i++) {
+        term *= x / (float)i; 
+        sum += term;
+    }
+    return sum;
+}
+
+
+
+void test_main(){
+    extern float exp_approx(float x, int n_term);
+    printf("exp_approx(1,10) = %f\n", exp_approx(1.0f, 10)); 
+    printf("exp_approx(2,12) = %f\n", exp_approx(2.0f, 12)); 
+}
+
+
+/*
+
+Coder une fonction sigmoid(float x) qui permet de calculer la fonction sigmoid de x. 
+
+*/
+
+
+#include <stdio.h>
+#include <stddef.h>
+
+float sigmoid(float x)
+{
+    float e = exp_approx(-x, 10);
+    return 1.0f/(1.0 + e);
+}
+
+void test_main(){
+    
+    printf("sigmoid(0) = %f\n", sigmoid(0.0f));
+    
+}
